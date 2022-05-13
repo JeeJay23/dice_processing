@@ -29,12 +29,13 @@ def processImg(img):
     binary = opening(binary, disk(4))
     binary = clear_border(binary)
 
+    # get amount of dices and locations
     labeled, amount = label(binary, return_num=True)
 
     # plot
     fig, axs = plt.subplots(ncols=6, nrows=2, figsize=(10,8), sharex='row', sharey='row')
 
-    #crop image
+    # crop image with locations
     for i in range (amount):
         diceXY = np.nonzero(labeled==(i+1))
         sr = min(diceXY[0])
@@ -51,11 +52,12 @@ def processImg(img):
         # get eyes
         eyes, numEyes = label(dice, return_num=True)
 
-        # show single dice
+        # plotting dices
         axs[1,i].imshow(dice, cmap='gray', vmin=0, vmax=1)
         axs[1,i].set_title("dice %i" % (i+1))
-        axs[1,i].annotate("N eyes: %i" % numEyes, xy=[3,15], xytext=[3,15], color='w')
+        axs[1,i].annotate("N eyes: %i" % numEyes, xy=[3,25], xytext=[3,25], color='w')
         axs[1,i].axis('off')
+        axs[1,i].autoscale()
 
     axs[0,0].imshow(img)
     axs[0,0].set_title("original")
@@ -76,7 +78,6 @@ def processImg(img):
 
     axs[0,4].axis('off')
     axs[0,5].axis('off')
-
 imgPath = "img\\"
 images = [image.imread(join(imgPath,f)) for f in listdir(imgPath) if isfile(join(imgPath, f))]
 for i in images:
