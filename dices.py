@@ -32,29 +32,46 @@ def processImg(img):
     labeled, amount = label(binary, return_num=True)
 
     # plot
-    fig, axs = plt.subplots(ncols=4, nrows=1, figsize=(10,8), sharex='row', sharey='row')
+    fig, axs = plt.subplots(ncols=6, nrows=2, figsize=(10,8), sharex='row', sharey='row')
 
-    axs[0].imshow(img)
-    axs[0].set_title("original")
-    axs[0].axis('off')
+    #crop image
+    for i in range (amount):
+        diceXY = np.nonzero(labeled==(i+1))
+        sr = min(diceXY[0])
+        br = max(diceXY[0])
+        sc = min(diceXY[1])
+        bc = max(diceXY[1])
 
-    axs[1].imshow(gray, cmap='gray', vmin=0, vmax=255)
-    axs[1].set_title("grayscale + gauss")
-    axs[1].axis('off')
+        dice = labeled[sr:br, sc:bc]
+        dice = 1 - dice
 
-    axs[2].imshow(binary, cmap='gray', vmin=0, vmax=1)
-    axs[2].set_title("tresholded")
-    axs[2].axis('off')
+        # show single dice
+        axs[1,i].imshow(dice, cmap='gray', vmin=0, vmax=1)
+        axs[1,i].set_title("dice %i" % (i+1))
+        axs[1,i].axis('off')
 
-    axs[3].imshow(labeled, cmap='plasma', vmin=0, vmax=amount)
-    axs[3].set_title("labeled")
-    axs[3].annotate("N dice: %i" % amount, xy=[0,500], xytext=[0,500], color='w')
-    axs[3].axis('off')
+    axs[0,0].imshow(img)
+    axs[0,0].set_title("original")
+    axs[0,0].axis('off')
 
+    axs[0,1].imshow(gray, cmap='gray', vmin=0, vmax=255)
+    axs[0,1].set_title("grayscale + gauss")
+    axs[0,1].axis('off')
 
-imgPath = "img\\"
-images = [image.imread(join(imgPath,f)) for f in listdir(imgPath) if isfile(join(imgPath, f))]
-for i in images:
-    processImg(i)
+    axs[0,2].imshow(binary, cmap='gray', vmin=0, vmax=1)
+    axs[0,2].set_title("tresholded")
+    axs[0,2].axis('off')
+
+    axs[0,3].imshow(labeled, cmap='plasma', vmin=0, vmax=amount)
+    axs[0,3].set_title("labeled")
+    axs[0,3].annotate("N dice: %i" % amount, xy=[0,500], xytext=[0,500], color='w')
+    axs[0,3].axis('off')
+
+#imgPath = "img\\"
+#images = [image.imread(join(imgPath,f)) for f in listdir(imgPath) if isfile(join(imgPath, f))]
+#for i in images:
+#    processImg(i)
+
+processImg(image.imread("img\\dice1.jpg"))
 
 plt.show()
