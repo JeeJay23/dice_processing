@@ -43,11 +43,18 @@ def processImg(img):
         bc = max(diceXY[1])
 
         dice = labeled[sr:br, sc:bc]
+        
+        # invert dice and only keep dice eyes
         dice = 1 - dice
+        dice = clear_border(dice)
+
+        # get eyes
+        eyes, numEyes = label(dice, return_num=True)
 
         # show single dice
         axs[1,i].imshow(dice, cmap='gray', vmin=0, vmax=1)
         axs[1,i].set_title("dice %i" % (i+1))
+        axs[1,i].annotate("N eyes: %i" % numEyes, xy=[3,15], xytext=[3,15], color='w')
         axs[1,i].axis('off')
 
     axs[0,0].imshow(img)
@@ -67,11 +74,14 @@ def processImg(img):
     axs[0,3].annotate("N dice: %i" % amount, xy=[0,500], xytext=[0,500], color='w')
     axs[0,3].axis('off')
 
-#imgPath = "img\\"
-#images = [image.imread(join(imgPath,f)) for f in listdir(imgPath) if isfile(join(imgPath, f))]
-#for i in images:
-#    processImg(i)
+    axs[0,4].axis('off')
+    axs[0,5].axis('off')
 
-processImg(image.imread("img\\dice1.jpg"))
+imgPath = "img\\"
+images = [image.imread(join(imgPath,f)) for f in listdir(imgPath) if isfile(join(imgPath, f))]
+for i in images:
+    processImg(i)
+
+#processImg(image.imread("img\\dice1.jpg"))
 
 plt.show()
