@@ -52,6 +52,8 @@ def processImg(img):
         # get eyes
         eyes, numEyes = label(dice, return_num=True)
 
+        print(numEyes," ", end = '')
+
         # plotting dices
         axs[1,i].imshow(dice, cmap='gray', vmin=0, vmax=1)
         axs[1,i].set_title("dice %i" % (i+1))
@@ -78,9 +80,14 @@ def processImg(img):
 
     axs[0,4].axis('off')
     axs[0,5].axis('off')
+    print("")
+
 imgPath = "img\\"
 images = [image.imread(join(imgPath,f)) for f in listdir(imgPath) if isfile(join(imgPath, f))]
+imgCount = 1
 for i in images:
+    print("dice", imgCount, "- ", end = '')
+    imgCount += 1
     processImg(i)
 
 #processImg(image.imread("img\\dice1.jpg"))
